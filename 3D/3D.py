@@ -32,6 +32,15 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("<Your game>")
 clock = pygame.time.Clock()   
 
+verticies=np.array([
+np.array([-1,-1,0,1]),
+np.array([-1,1,0,1]),
+np.array([1,-1,0,1]),
+])
+
+mesh = [
+    Triangle([[0,0,0],[0,1,0],[1,1,0]]),
+]
 
 
 ## Game loop
@@ -45,11 +54,6 @@ while running:
 
     screen.fill(WHITE)
 
-    verticies=np.array([
-    np.array([-1,-1,0,1]),
-    np.array([-1,1,0,1]),
-    np.array([1,-1,0,1]),
-    ])
 
     pressed = pygame.key.get_pressed()
 
@@ -79,16 +83,19 @@ while running:
     scaleMatrix = getScaleMatrix(scaleFactor,scaleFactor,scaleFactor,x,y,0)
     rotationYMatrix = getRotationYMatrix(np.deg2rad(theta),x,y,z)
 
-    for i in range(len(verticies)):
-        verticies[i]=rotationYMatrix.dot(scaleMatrix.dot(translationMatrix.dot(verticies[i])))
+    a=Mesh([Triangle([[6,4],[3,9]])])
+    matrix = np.array([[2,3],[67,8]]) #now make it between the Matrix class and a mesh
 
-    verticies_tuples=[]
-    for vertex in verticies:
-        verticies_tuples.append((vertex[0],vertex[1]))
+    new=a*matrix
 
-    pygame.draw.polygon(screen,RED,verticies_tuples, width=1)
+    print(new.triangles)
 
-    pygame.draw.circle(screen,BLUE,(x,y),2)
+
+    # for triangle in mesh:
+        # transformedMesh=rotationYMatrix.dot(scaleMatrix.dot(translationMatrix.dot(verticies[i])))
+
+
+    # pygame.draw.circle(screen,BLUE,(x,y),2)
 
     pygame.display.flip()
 
