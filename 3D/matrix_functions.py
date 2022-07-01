@@ -20,13 +20,31 @@ def getScaleMatrix(Sx,Sy,Sz,Ox,Oy,Oz):
         ])
     return m
 
-def getRotationYMatrix(theta):
+def getRotationYMatrix(theta,Ox,Oy,Oz):
 
-    m = np.array([
+    T=getTranslationMatrix(Ox,Oy,Oz)
+    Tb=getTranslationMatrix(-Ox,-Oy,-Oz)
+
+    R = np.array([
         [np.cos(theta),0,0,0],
         [0,1,0,0],
         [-np.sin(theta),0,np.cos(theta),0],
         [0,0,0,1],
         ])
-    return m
 
+    return T.dot(R.dot(Tb))
+
+class triangle:
+    def __init__(self,verticies):
+        self.verticies=verticies
+
+class matrix:
+    def __init__(self,array):
+        self.m=np.array(array)
+
+
+class vertex:
+    def __init__(self,x,y,z):
+        self.x=x
+        self.y=y
+        self.z=z
