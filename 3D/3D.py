@@ -6,8 +6,8 @@ from matrix_functions import *
 
 WIDTH = 800
 HEIGHT = 800
-FPS = 30
-scaleFactor=100
+FPS = 60
+scaleFactor=400
 theta=0
 startx=400
 x=startx
@@ -38,9 +38,10 @@ np.array([-1,1,0,1]),
 np.array([1,-1,0,1]),
 ])
 
-mesh = [
-    Triangle([[0,0,0],[0,1,0],[1,1,0]]),
-]
+mesh = TriangleMesh([
+    [0,0,0],[0,1,0],[1,1,0],
+    [0,0,0],[1,1,0],[1,0,1],
+])
 
 
 ## Game loop
@@ -58,9 +59,9 @@ while running:
     pressed = pygame.key.get_pressed()
 
     if pressed[pygame.K_t]:
-        scaleFactor+=0.01
+        scaleFactor*=1.1
     if pressed[pygame.K_r]:
-        scaleFactor-=0.01
+        scaleFactor/=1.1
     if pressed[pygame.K_e]:
         theta+=1
     if pressed[pygame.K_q]:
@@ -80,22 +81,18 @@ while running:
         theta=0
 
     translationMatrix = getTranslationMatrix(x,y,z)
-    scaleMatrix = getScaleMatrix(scaleFactor,scaleFactor,scaleFactor,x,y,0)
+    scaleMatrix = getScaleMatrix(scaleFactor,scaleFactor,scaleFactor,x+0.5,y+0.5,0)
     rotationYMatrix = getRotationYMatrix(np.deg2rad(theta),x,y,z)
 
-    a=Mesh([Triangle([[6,4],[3,9]])])
-    matrix = np.array([[2,3],[67,8]]) #now make it between the Matrix class and a mesh
+    translatedMesh = rotationYMatrix * scaleMatrix * translationMatrix * mesh
 
-    new=a*matrix
-
-    print(new.triangles)
-
+    translatedMesh.draw(screen)
 
     # for triangle in mesh:
         # transformedMesh=rotationYMatrix.dot(scaleMatrix.dot(translationMatrix.dot(verticies[i])))
 
 
-    # pygame.draw.circle(screen,BLUE,(x,y),2)
+    pygame.draw.circle(screen,BLUE,(x,y),2)
 
     pygame.display.flip()
 
