@@ -39,8 +39,8 @@ np.array([1,-1,0,1]),
 ])
 
 mesh = TriangleMesh([
-    [0,0,0],[0,1,0],[1,1,0],
-    [0,0,0],[1,1,0],[1,0,1],
+    [0,0,1],[0,1,1],[1,1,1],
+    [0,0,0],[1,1,0],[1,0,0],
 ])
 
 
@@ -82,7 +82,7 @@ while running:
 
     translationMatrix = getTranslationMatrix(x,y,z)
     scaleMatrix = getScaleMatrix(scaleFactor,scaleFactor,scaleFactor,x+0.5,y+0.5,0)
-    rotationYMatrix = getRotationYMatrix(np.deg2rad(theta),x,y,z)
+    rotationYMatrix = getRotationYMatrix(theta,x,y,z,[0,1,0])
 
     translatedMesh = rotationYMatrix * scaleMatrix * translationMatrix * mesh
 

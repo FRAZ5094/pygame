@@ -21,17 +21,39 @@ def getScaleMatrix(Sx,Sy,Sz,Ox,Oy,Oz):
         ]
     return Matrix(m)
 
-def getRotationYMatrix(theta,Ox,Oy,Oz):
+def getRotationYMatrix(theta,Ox,Oy,Oz,n):
+
 
     T=getTranslationMatrix(Ox,Oy,Oz)
     Tb=getTranslationMatrix(-Ox,-Oy,-Oz)
 
+    theta=np.deg2rad(theta)
+
+    c=np.cos(theta)
+    s=np.sin(theta)
+
+    n=np.array(n)
+    n=n/np.sqrt(n.sum())
+    
+
+    x=n[0]
+    y=n[1]
+    z=n[2]
+
+    # R = Matrix([
+        # [c,0,0,0],
+        # [0,1,0,0],
+        # [-s,0,c,0],
+        # [0,0,0,1],
+        # ])
+
     R = Matrix([
-        [np.cos(theta),0,0,0],
-        [0,1,0,0],
-        [-np.sin(theta),0,np.cos(theta),0],
-        [0,0,0,1],
+        [((x**2) * (1-c)) + c,  ((x*y) * (1-c)) - z*s, ((x*z) * (1-c)) + y*s, 0],
+        [((y*x) * (1-c)) + z*s,  ((y**2) * (1-c)) + c,  ((y*z) * (1-c)) - x*s, 0],
+        [((x*z) * (1-c)) - y*s, ((y*z) * (1-c)) + x*s,     ((z**2) * (1-c)) + c, 0],
+        [0,0,0,1]
         ])
+
 
 
     return T * R * Tb
@@ -61,7 +83,7 @@ class TriangleMesh:
 
         for i in range(int(len(self.verticies[0])/3)):
             verticies_tuple=[tuple(self.verticies[:,3*i][0:2]),tuple(self.verticies[:,(3*i)+1][0:2]),tuple(self.verticies[:,(3*i)+2][0:2])]
-            pygame.draw.polygon(screen,Colours[int(i%3)],verticies_tuple, width=1)
+            pygame.draw.polygon(screen,Colours[int(i%3)],verticies_tuple)
 
 class Matrix:
     def __init__(self,array):
