@@ -21,16 +21,15 @@ def getScaleMatrix(Sx,Sy,Sz,Ox,Oy,Oz):
         ]
     return Matrix(m)
 
-def getRotationYMatrix(theta,Ox,Oy,Oz,n):
-
+def getRotationMatrix(angle,Ox,Oy,Oz,n):
 
     T=getTranslationMatrix(Ox,Oy,Oz)
     Tb=getTranslationMatrix(-Ox,-Oy,-Oz)
 
-    theta=np.deg2rad(theta)
+    angle=np.deg2rad(angle)
 
-    c=np.cos(theta)
-    s=np.sin(theta)
+    c=np.cos(angle)
+    s=np.sin(angle)
 
     n=np.array(n)
     n=n/np.sqrt(n.sum())
@@ -64,22 +63,14 @@ class TriangleMesh:
             self.verticies=verticies
         else:
             transposedVerticies=np.array(verticies).T
-
             ncols=len(transposedVerticies[0])
             self.verticies=np.vstack([transposedVerticies, [1]*ncols])
-        # print(self.verticies,"verticies after __init__")
 
     def draw(self,screen):
         RED = (255, 0, 0)
         GREEN = (0, 255, 0)
         BLUE = (0, 0, 255)
         Colours=[RED,GREEN,BLUE]
-        # print(self.verticies)
-        
-        # print("----")
-        # print(tuple(self.verticies[:,0][0:2]))
-        # print(self.verticies[:,1][0:2])
-        # print(self.verticies[:,2][0:2])
 
         for i in range(int(len(self.verticies[0])/3)):
             verticies_tuple=[tuple(self.verticies[:,3*i][0:2]),tuple(self.verticies[:,(3*i)+1][0:2]),tuple(self.verticies[:,(3*i)+2][0:2])]
@@ -91,8 +82,10 @@ class Matrix:
 
     def __mul__(self,other):
         if isinstance(other,TriangleMesh):
+            #TypeError: unsupported operand type(s) for *: 'int' and 'NoneType' ?????
+            # print(self.m)
+            # print(other.verticies)
             transformedVerticies=self.m.dot(other.verticies)
-            # print(transformedVerticies, "verticies after transform")
             return TriangleMesh(transformedVerticies)
         elif isinstance(other, Matrix):
             return Matrix(self.m.dot(other.m))

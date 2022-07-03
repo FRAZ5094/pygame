@@ -8,13 +8,13 @@ WIDTH = 800
 HEIGHT = 800
 FPS = 60
 scaleFactor=400
-theta=0
-startx=400
-x=startx
-starty=400
-y=starty
 
-z=0
+camerax=0
+cameray=0
+cameraz=0
+theta=0
+psi=0
+
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -41,7 +41,9 @@ np.array([1,-1,0,1]),
 mesh = TriangleMesh([
     [0,0,1],[0,1,1],[1,1,1],
     [0,0,0],[1,1,0],[1,0,0],
-])
+    ]
+)
+
 
 
 ## Game loop
@@ -62,29 +64,37 @@ while running:
         scaleFactor*=1.1
     if pressed[pygame.K_r]:
         scaleFactor/=1.1
-    if pressed[pygame.K_e]:
-        theta+=1
-    if pressed[pygame.K_q]:
-        theta-=1
-    if pressed[pygame.K_s]:
-        y+=10
     if pressed[pygame.K_w]:
-        y-=10
+        cameraz+=10
+    if pressed[pygame.K_s]:
+        cameraz-=10
     if pressed[pygame.K_d]:
-        x+=10
+        camerax+=10
     if pressed[pygame.K_a]:
-        x-=10
+        camerax-=10
+    if pressed[pygame.K_SPACE]:
+        cameray+=10
+    if pressed[pygame.K_LSHIFT]:
+        cameray-=10
+    if pressed[pygame.K_UP]:
+        theta+=1
+    if pressed[pygame.K_DOWN]:
+        theta-=1
+    if pressed[pygame.K_LEFT]:
+        psi+=1
+    if pressed[pygame.K_RIGHT]:
+        psi-=1
     if pressed[pygame.K_u]:
-        x=startx
-        y=starty
+        x=0
+        y=0
         z=0
         theta=0
 
-    translationMatrix = getTranslationMatrix(x,y,z)
-    scaleMatrix = getScaleMatrix(scaleFactor,scaleFactor,scaleFactor,x+0.5,y+0.5,0)
-    rotationYMatrix = getRotationYMatrix(theta,x,y,z,[0,1,0])
-
-    translatedMesh = rotationYMatrix * scaleMatrix * translationMatrix * mesh
+    #Position Mesh in world at (400,400,0)
+    initialScaleFactor=200
+    modelToWorldMatrix = getTranslationMatrix(400,400,0) * getScaleMatrix(initialScaleFactor,initialScaleFactor,initialScaleFactor,0,0,0)
+    worldToViewMatrix = getTranslationMatrix(camerax,cameray,cameraz) * getRotationMatrix(theta,0,0,0,[1,0,0]) * getRotationMatrix(psi,0,0,0,[0,1,0])
+    translatedMesh =  worldToViewMatrix * modelToWorldMatrix * mesh
 
     translatedMesh.draw(screen)
 
@@ -92,7 +102,6 @@ while running:
         # transformedMesh=rotationYMatrix.dot(scaleMatrix.dot(translationMatrix.dot(verticies[i])))
 
 
-    pygame.draw.circle(screen,BLUE,(x,y),2)
 
     pygame.display.flip()
 
