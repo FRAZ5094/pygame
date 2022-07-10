@@ -109,7 +109,8 @@ while running:
     initialScaleFactor=200
     modelToWorldMatrix = getTranslationMatrix(400,400,0) * getScaleMatrix(initialScaleFactor,initialScaleFactor,initialScaleFactor,0,0,0)
     worldToViewMatrix = getTranslationMatrix(-camerax,-cameray,-cameraz) * getRotationMatrix(-theta,-camerax,-cameray,-cameraz,[1,0,0]) * getRotationMatrix(-psi,-camerax,-cameray,-cameray,[0,1,0])
-    translatedMesh =  worldToViewMatrix * modelToWorldMatrix * mesh
+    viewToProjectionMatrix = getProjectionMatrix()
+    translatedMesh =  viewToProjectionMatrix * worldToViewMatrix * modelToWorldMatrix * mesh
 
     translatedMesh.draw(screen)
 

@@ -37,6 +37,8 @@ def getProjectionMatrix():
         [0,0,(-zfar * znear) / (zfar - znear)],0],
         ]
 
+    return Matrix(m)
+
 
 def getRotationMatrix(angle,Ox,Oy,Oz,n):
 
