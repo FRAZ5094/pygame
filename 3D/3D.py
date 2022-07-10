@@ -39,8 +39,23 @@ np.array([1,-1,0,1]),
 ])
 
 mesh = TriangleMesh([
-    [0,0,1],[0,1,1],[1,1,1],
+    [0,0,0],[0,1,0],[1,1,0],
     [0,0,0],[1,1,0],[1,0,0],
+
+    [1,0,0],[1,1,0],[1,1,1],
+    [1,0,0],[1,1,1],[1,0,1],
+
+    [1,0,1],[1,1,1],[0,1,1],
+    [1,0,1],[0,1,1],[0,0,1],
+
+    [0,0,1],[0,1,1],[0,1,0],
+    [0,0,1],[0,1,0],[0,0,0],
+
+    [0,1,0],[0,1,1],[1,1,1],
+    [0,1,0],[1,1,1],[1,1,0],
+
+    [1,0,1],[0,0,1],[0,0,0],
+    [1,0,1],[0,0,0],[1,0,0],
     ]
 )
 
@@ -65,17 +80,17 @@ while running:
     if pressed[pygame.K_r]:
         scaleFactor/=1.1
     if pressed[pygame.K_w]:
-        cameraz+=10
-    if pressed[pygame.K_s]:
         cameraz-=10
+    if pressed[pygame.K_s]:
+        cameraz+=10
     if pressed[pygame.K_d]:
         camerax+=10
     if pressed[pygame.K_a]:
         camerax-=10
     if pressed[pygame.K_SPACE]:
-        cameray+=10
-    if pressed[pygame.K_LSHIFT]:
         cameray-=10
+    if pressed[pygame.K_LSHIFT]:
+        cameray+=10
     if pressed[pygame.K_UP]:
         theta+=1
     if pressed[pygame.K_DOWN]:
@@ -93,10 +108,12 @@ while running:
     #Position Mesh in world at (400,400,0)
     initialScaleFactor=200
     modelToWorldMatrix = getTranslationMatrix(400,400,0) * getScaleMatrix(initialScaleFactor,initialScaleFactor,initialScaleFactor,0,0,0)
-    worldToViewMatrix = getTranslationMatrix(camerax,cameray,cameraz) * getRotationMatrix(theta,0,0,0,[1,0,0]) * getRotationMatrix(psi,0,0,0,[0,1,0])
+    worldToViewMatrix = getTranslationMatrix(-camerax,-cameray,-cameraz) * getRotationMatrix(-theta,-camerax,-cameray,-cameraz,[1,0,0]) * getRotationMatrix(-psi,-camerax,-cameray,-cameray,[0,1,0])
     translatedMesh =  worldToViewMatrix * modelToWorldMatrix * mesh
 
     translatedMesh.draw(screen)
+
+    getProjectionMatrix()
 
     # for triangle in mesh:
         # transformedMesh=rotationYMatrix.dot(scaleMatrix.dot(translationMatrix.dot(verticies[i])))

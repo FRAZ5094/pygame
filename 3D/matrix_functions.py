@@ -21,6 +21,23 @@ def getScaleMatrix(Sx,Sy,Sz,Ox,Oy,Oz):
         ]
     return Matrix(m)
 
+def getProjectionMatrix():
+    w,h = pygame.display.get_surface().get_size()
+
+    znear=0.1
+    zfar=1000
+    FOVx=np.deg2rad(90)
+    FOVy=np.deg2rad(90)
+    AR=h/w
+
+    m = [
+        [AR*(1/np.arctan(FOVx/2), 0, 0, 0],
+        [0, np.arctan(FOVy/2), 0, 0],
+        [0, 0, zfar/(zfar - znear),1],
+        [0,0,(-zfar * znear) / (zfar - znear)],0],
+        ]
+
+
 def getRotationMatrix(angle,Ox,Oy,Oz,n):
 
     T=getTranslationMatrix(Ox,Oy,Oz)
@@ -74,7 +91,7 @@ class TriangleMesh:
 
         for i in range(int(len(self.verticies[0])/3)):
             verticies_tuple=[tuple(self.verticies[:,3*i][0:2]),tuple(self.verticies[:,(3*i)+1][0:2]),tuple(self.verticies[:,(3*i)+2][0:2])]
-            pygame.draw.polygon(screen,Colours[int(i%3)],verticies_tuple)
+            pygame.draw.polygon(screen,Colours[int(i%3)],verticies_tuple, width=1)
 
 class Matrix:
     def __init__(self,array):
