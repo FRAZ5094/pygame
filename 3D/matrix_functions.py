@@ -8,7 +8,7 @@ def getTranslationMatrix(Tx,Ty,Tz):
         [0,1,0,Ty],
         [0,0,1,Tz],
         [0,0,0,1],
-        ]
+    ]
     return Matrix(m)
 
 def getScaleMatrix(Sx,Sy,Sz,Ox,Oy,Oz):
@@ -18,10 +18,11 @@ def getScaleMatrix(Sx,Sy,Sz,Ox,Oy,Oz):
         [0,Sy,0,-Oy*Sy + Oy],
         [0,0,Sz,-Oz*Sz + Oz],
         [0,0,0,1],
-        ]
+    ]
     return Matrix(m)
 
 def getProjectionMatrix():
+
     w,h = pygame.display.get_surface().get_size()
 
     znear=0.1
@@ -31,11 +32,11 @@ def getProjectionMatrix():
     AR=h/w
 
     m = [
-        [AR*(1/np.arctan(FOVx/2), 0, 0, 0],
+        [AR*(1/np.arctan(FOVx/2)), 0, 0, 0],
         [0, np.arctan(FOVy/2), 0, 0],
         [0, 0, zfar/(zfar - znear),1],
-        [0,0,(-zfar * znear) / (zfar - znear)],0],
-        ]
+        [0,0,(-zfar * znear) / (zfar - znear),0],
+    ]
 
     return Matrix(m)
 
@@ -85,6 +86,7 @@ class TriangleMesh:
             ncols=len(transposedVerticies[0])
             self.verticies=np.vstack([transposedVerticies, [1]*ncols])
 
+
     def draw(self,screen):
         RED = (255, 0, 0)
         GREEN = (0, 255, 0)
@@ -101,9 +103,6 @@ class Matrix:
 
     def __mul__(self,other):
         if isinstance(other,TriangleMesh):
-            #TypeError: unsupported operand type(s) for *: 'int' and 'NoneType' ?????
-            # print(self.m)
-            # print(other.verticies)
             transformedVerticies=self.m.dot(other.verticies)
             return TriangleMesh(transformedVerticies)
         elif isinstance(other, Matrix):

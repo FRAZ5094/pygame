@@ -59,7 +59,8 @@ mesh = TriangleMesh([
     ]
 )
 
-
+w,h = pygame.display.get_surface().get_size()
+a=0
 
 ## Game loop
 running = True
@@ -100,19 +101,25 @@ while running:
     if pressed[pygame.K_RIGHT]:
         psi-=1
     if pressed[pygame.K_u]:
-        x=0
-        y=0
-        z=0
+        camerax=0
+        cameray=0
+        cameraz=0
         theta=0
+        psi=0
 
     #Position Mesh in world at (400,400,0)
-    initialScaleFactor=200
-    modelToWorldMatrix = getTranslationMatrix(400,400,0) * getScaleMatrix(initialScaleFactor,initialScaleFactor,initialScaleFactor,0,0,0)
-    worldToViewMatrix = getTranslationMatrix(-camerax,-cameray,-cameraz) * getRotationMatrix(-theta,-camerax,-cameray,-cameraz,[1,0,0]) * getRotationMatrix(-psi,-camerax,-cameray,-cameray,[0,1,0])
+    x=400
+    initialScaleFactor=50
+    a+=1
+    modelToWorldMatrix = getRotationMatrix(a,x,0,0,[0,1,0]) * getTranslationMatrix(0,0,0) * getTranslationMatrix(h/2,w/2,0) * getScaleMatrix(initialScaleFactor,initialScaleFactor,initialScaleFactor,0,0,0) * getTranslationMatrix(-0.5,-0.5,0)
+    worldToViewMatrix = getRotationMatrix(psi,w/2,h/2,0,[0,1,0])
     viewToProjectionMatrix = getProjectionMatrix()
-    translatedMesh =  viewToProjectionMatrix * worldToViewMatrix * modelToWorldMatrix * mesh
+    translatedMesh = modelToWorldMatrix * mesh
 
     translatedMesh.draw(screen)
+
+    pygame.draw.line(screen,(255,0,0),(x,0),(x,h))
+    pygame.draw.line(screen,(255,0,0),(x+25,0),(x+25,h))
 
     getProjectionMatrix()
 
